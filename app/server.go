@@ -12,6 +12,7 @@ func Ping(conn net.Conn) {
 	_, err := conn.Write(pong)
 	if err != nil {
 		log.Fatal("Failed to respond to ping")
+		fmt.Println(err)
 	}
 }
 
@@ -35,8 +36,13 @@ func main() {
 	}
 
 	buffer := make([]byte, 1024)
-	_, err = connection.Read(buffer)
-	Ping(connection)
+
+	for {
+		cmd, _ := connection.Read(buffer)
+		fmt.Println("Received: ", string(cmd))
+		Ping(connection)
+	}
+
 	fmt.Print("\nStopping the server...")
 
 }
